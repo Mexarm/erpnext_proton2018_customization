@@ -1,0 +1,29 @@
+[
+ {
+  "docstatus": 0, 
+  "doctype": "Custom Script", 
+  "dt": "Production Order", 
+  "modified": "2018-04-13 16:26:20.239214", 
+  "name": "Production Order-Client", 
+  "script": "\ncur_frm.cscript.custom_validate = function(doc) {\n\tif ('wip_warehouse' in doc) { \n   \tif (doc.wip_warehouse.indexOf('(WIP)') === -1) {\n\t\tfrappe.msgprint(__(\"WIP warehouse not correct\"));\n        \tfrappe.validated = false;\n\t}\n\t\t\n   } else { \n\tfrappe.msgprint(__(\"WIP warehouse is required\"));\n        \tfrappe.validated = false;\n }\n}\nfrappe.ui.form.on(\"Production Order\", {\n  onload: function(frm,cdt,cdn) {\n\tconsole.log(cdt,cdn);\n\tif (!('fg_warehouse' in frm)) {\n\t frappe.model.set_value(cdt,cdn,'fg_warehouse','Productos terminados (FG) - PL');\t\n\t}\n\n\tif (!('wip_warehouse' in frm)) {\n\t frappe.model.set_value(cdt,cdn,'wip_warehouse','Trabajo en proceso (WIP) - PL');\t\n\t}\n\tif (!('scrap_warehouse' in frm)) {\n\t frappe.model.set_value(cdt,cdn,'scrap_warehouse','Desperdicio (SCRAP) - PL');\t\n\t}\n\tfrm.set_df_property(\"fg_warehouse\", \"reqd\", 1);\n\tfrm.set_df_property(\"wip_warehouse\", \"reqd\", 1);\n\tfrm.set_df_property(\"scrap_warehouse\", \"reqd\", 1);\n\n\tvar start_btn = frm.add_custom_button('ACTION', function() {\n\t\t\t\t\t\terpnext.work_order.make_se(frm, 'Material Transfer for Manufacture');\n\t\t\t\t\t});\n\tstart_btn.addClass('btn-primary');\n\n  }\n});\n", 
+  "script_type": "Client"
+ }, 
+ {
+  "docstatus": 0, 
+  "doctype": "Custom Script", 
+  "dt": "Stock Entry", 
+  "modified": "2018-04-17 17:56:50.511654", 
+  "name": "Stock Entry-Client", 
+  "script": "frappe.ui.form.on(\"Stock Entry\", {\n  onload: function(frm, cdt, cdn) {\n    var d = locals[cdt][cdn];\n    var total = 0;\n    $.each(d.items, function(index, row) {\n      frappe.model.get_value(\n        \"Item\",\n        { item_code: row.item_code },\n        \"print_process_required\",\n        function(d) {\n          row.impresion = d.print_process_required;\n          if (row.impresion === 1) {\n            row.t_warehouse = \"Impresion - WIP - PL\";\n          }\n        }\n      );\n    });\n  }\n});\n", 
+  "script_type": "Client"
+ }, 
+ {
+  "docstatus": 0, 
+  "doctype": "Custom Script", 
+  "dt": "Grafica de Impresion", 
+  "modified": "2018-04-17 19:25:09.277907", 
+  "name": "Grafica de Impresion-Client", 
+  "script": "cur_frm.set_query('sales_order', function () {\n    return {\n        filters: {\n            'status': 'To Deliver and Bill'\n        }\n    }\n});\n\ncur_frm.fields_dict['archivos_spool'].grid.get_field('material').get_query = function(doc, cdt, cdn)\n {\n                var d = locals[cdt][cdn];\n                return {\n                    filters: [[\n                            'Item', 'print_process_required', '=', 1\n                    ]]\n                }\n };\n\nfrappe.ui.form.on(\"Grafica de Impresion\", \"validate\", function(frm, cdt, cdn) {\n\t\t//Sum each spool_entry \n   \t\tvar material_details = frm.doc.archivos_spool\n   \t\tvar total = 0\n   \t\tfor(var i in material_details) {\n\t\t\ttotal = total + material_details[i].cantidad_de_registros\n\t\t}\n\t\tfrm.set_value(\"total\",total)\nconsole.log(material_details)\n\n$.each(material_details, function(index, row) {\n      console.log(index,row);\n      frappe.model.get_value(\n        \"Item\",\n        { item_code: row.material },\n        \"print_process_required\",\n        function(d) {\n          console.log(d);\n        }\n      );\n    });\t\t\n\n\n\n\n\t     });\n", 
+  "script_type": "Client"
+ }
+]
