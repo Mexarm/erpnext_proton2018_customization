@@ -119,4 +119,4 @@ app_license = "MIT"
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "erpnext_proton2018_customization.event.get_events"
 # }
-fixtures = ["Custom Field", "Custom Script", "Property Setter", "Print Format"]
+fixtures = ["Custom Field", "Custom Script", "Property Setter", "Print Format", {"dt" : "DocType", "filters": [["name", "in", ("Grafica de Impresion","Spool Entry")]]}]
