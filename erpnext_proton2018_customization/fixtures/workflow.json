@@ -1,0 +1,87 @@
+[
+ {
+  "docstatus": 0, 
+  "doctype": "Workflow", 
+  "document_type": "Grafica de Impresion", 
+  "is_active": 1, 
+  "modified": "2018-04-25 21:18:31.434389", 
+  "name": "Flujo Grafica de Impresion", 
+  "override_status": 0, 
+  "states": [
+   {
+    "allow_edit": "Programador", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Borrador", 
+    "update_field": "wfd_status", 
+    "update_value": "Borrador"
+   }, 
+   {
+    "allow_edit": "Operador de Impresion", 
+    "doc_status": "1", 
+    "message": null, 
+    "state": "Liberado", 
+    "update_field": "wfd_status", 
+    "update_value": "Liberado"
+   }, 
+   {
+    "allow_edit": "Operador de Impresion", 
+    "doc_status": "1", 
+    "message": null, 
+    "state": "Imprimiendose", 
+    "update_field": "wfd_status", 
+    "update_value": "Imprimiendose"
+   }, 
+   {
+    "allow_edit": "Administrator", 
+    "doc_status": "1", 
+    "message": null, 
+    "state": "Finalizado", 
+    "update_field": "wfd_status", 
+    "update_value": "Finalizado"
+   }, 
+   {
+    "allow_edit": "Administrator", 
+    "doc_status": "2", 
+    "message": null, 
+    "state": "Rechazado", 
+    "update_field": "wfd_status", 
+    "update_value": "Rechazado"
+   }
+  ], 
+  "transitions": [
+   {
+    "action": "Liberar", 
+    "allowed": "Programador", 
+    "next_state": "Liberado", 
+    "state": "Borrador"
+   }, 
+   {
+    "action": "Imprimir", 
+    "allowed": "Operador de Impresion", 
+    "next_state": "Imprimiendose", 
+    "state": "Liberado"
+   }, 
+   {
+    "action": "Finalizar", 
+    "allowed": "Operador de Impresion", 
+    "next_state": "Finalizado", 
+    "state": "Imprimiendose"
+   }, 
+   {
+    "action": "Rechazar", 
+    "allowed": "Operador de Impresion", 
+    "next_state": "Rechazado", 
+    "state": "Imprimiendose"
+   }, 
+   {
+    "action": "Rechazar", 
+    "allowed": "Operador de Impresion", 
+    "next_state": "Rechazado", 
+    "state": "Liberado"
+   }
+  ], 
+  "workflow_name": "Flujo Grafica de Impresion", 
+  "workflow_state_field": "workflow_state"
+ }
+]
