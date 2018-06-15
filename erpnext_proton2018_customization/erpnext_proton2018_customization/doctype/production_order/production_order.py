@@ -25,7 +25,10 @@ def update_production_order_qty(self):
                         qty = flt(frappe.db.sql("""select sum(fg_completed_qty)
                                 from `tabStock Entry` where production_order=%s and docstatus=1
                                 and purpose=%s and tipo=%s""", (self.name, purpose, tipo))[0][0])
-                        transfer_qty.append(qty)
+                        if self.printrequired and tipo in ["impresion", "imp_a_prod"]:
+                                transfer_qty.append(qty)
+                        if self.prodrequired and tipo == "produccion":
+                                transfer_qty.append(qty)
                         if qty > (self.qty):
                                 frappe.throw(_("{0} ({1}) cannot be greater than planned quantity ({2}) in Production Order {3}").format(\
                                         self.meta.get_label(fieldname), qty, self.qty, self.name), StockOverProductionError)
