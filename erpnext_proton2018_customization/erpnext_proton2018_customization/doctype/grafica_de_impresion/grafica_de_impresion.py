@@ -29,4 +29,3 @@ def save_causa_de_rechazo(form_dict):
         #gi.causa_de_rechazo = doc.get('causa_de_rechazo')
         #return gi.save()
         return frappe.db.set_value('Grafica de Impresion', doc['name'], 'causa_de_rechazo', doc['causa_de_rechazo'])
-
