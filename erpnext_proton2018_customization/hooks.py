@@ -120,7 +120,7 @@ app_license = "MIT"
 # 	"frappe.desk.doctype.event.event.get_events": "erpnext_proton2018_customization.event.get_events"
 # }
 fixtures = ["Custom Field", "Custom Script", "Property Setter", "Print Format",
-            {"dt" : "DocType", "filters": [["name", "in", ("Spool Entry","Grafica de Impresion")]]},
+            {"dt" : "DocType", "filters": [["name", "in", ("Spool Entry","Grafica de Impresion","Role Entry")]]},
             {"dt": "Workflow State", "filters": [["name", "in", ("Borrador","Liberado", "Imprimiendose", "Finalizado", "Rechazado")]] },
             {"dt": "Workflow Action", "filters": [["name", "in", ("Liberar","Imprimir", "Finalizar", "Rechazar")]]},
             "Workflow" ]
