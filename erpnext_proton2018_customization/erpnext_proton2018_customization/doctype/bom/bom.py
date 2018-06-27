@@ -25,3 +25,12 @@ def get_raw_materials_cost_for_item(item_code):
         item = frappe.get_doc("Item", item_code)
         if item: return item.valuation_rate
         return 0.0
+
+@frappe.whitelist()
+def get_raw_materials_cost_and_sla_for_item(item_code):
+        bom_no = get_default_bom_item(item_code)
+        bom = frappe.get_doc("BOM" , bom_no)
+        if bom: return { 'raw_material_cost': bom.raw_material_cost, 'nivel_de_servicio': bom.nivel_de_servicio }
+        item = frappe.get_doc("Item", item_code)
+        if item: return { 'raw_material_cost': item.valuation_rate, 'nivel_de_servicio': 0 }
+        return { 'raw_material_cost': 0.0, 'nivel_de_servicio': 0 }
