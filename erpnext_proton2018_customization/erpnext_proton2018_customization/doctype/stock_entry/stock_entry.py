@@ -58,3 +58,9 @@ def get_transferred_qty(production_order_id, item_list):
                         frappe.throw(_("item {0} has not valid qty, qty should be divisible by {1}  ").format(item.item_code, exploded_items_dict[item.item_code]))
                 qty.append(item_qty)
         return min(qty)
+
+@frappe.whitelist()
+def get_proton_setup_settings():
+        """returns the Proton Setup Settings"""
+        return { "almacen_wip_impresion":  frappe.db.get_single_value('Proton Setup', 'almacen_wip_impresion'),
+                 "almacen_wip_produccion": frappe.db.get_single_value('Proton Setup', 'almacen_wip_produccion')}
