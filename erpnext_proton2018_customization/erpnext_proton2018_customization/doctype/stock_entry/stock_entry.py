@@ -63,4 +63,25 @@ def get_transferred_qty(production_order_id, item_list):
 def get_proton_setup_settings():
         """returns the Proton Setup Settings"""
         return { "almacen_wip_impresion":  frappe.db.get_single_value('Proton Setup', 'almacen_wip_impresion'),
-                 "almacen_wip_produccion": frappe.db.get_single_value('Proton Setup', 'almacen_wip_produccion')}
+                 "almacen_wip_produccion": frappe.db.get_single_value('Proton Setup', 'almacen_wip_produccion'),
+                 "hora_limite_de_entrega_de_archivos": frappe.db.get_single_value('Proton Setup', 'hora_limite_de_entrega_de_archivos')}
+
+@frappe.whitelist()
+def  check_SO_adicionales_variables(production_order_name):
+        """Check if the parent sales order of the  production order has an associated Sales Order for the additional items, if so returns true, else returns false"""
+        po = frappe.get_doc("Production Order",  production_order_name)
+        if po.sales_order:
+                so = frappe.get_doc("Sales Order", po.sales_order)
+                if so.adicionales_variables:
+                        if so.orden_de_venta_de_los_adicionales:
+                                so_adicionales = frappe.get_doc("Sales Order", so.orden_de_venta_de_los_adicionales)
+                                if so_adicionales.docstatus == 1:
+                                        return { "validated" : True, "message": "validated" }
+                                else:
+                                        return { "validated": False, "message": "La Orden de Venta {} de adicionales variables existe pero no se ha validado (not submitted)".format(so.orden_de_venta_de_los_adicionales) }
+                        else:
+                                return { "validated": False, "message": "se requiere un Orden de Venta para los adicionales, pero esta no se ha indicado en la OV principal {}".format(po.sales_order) }# se requiere una OV para los adicionales pero no se ha encontrado
+                else:
+                        return { "validated": True, "message": "no se requieren adicionales"} # no se requieren adicionales
+        else:
+                return { "validated": False, "message": "Error no se Encuentra Orden de Venta para la Orden de Produccion {}".format(production_order_name) }  #error al leer la  orden de  Produccion
